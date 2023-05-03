@@ -15,13 +15,10 @@ function reducer(state, action) {
         ],
       };
     case ACTIONS.DELETE_TODO:
-      return function (id) {
-        state.todos.filter((item) => {
-          if (item.id !== action.id) {
-            return item;
-          } else return item;
-        });
-      };
+      return state.todos.filter((item) => {
+        item.id !== action.payload.id;
+      });
+
     default:
       return state;
   }
@@ -33,12 +30,16 @@ function App() {
 
   const list = state.todos.map((item) => {
     return (
-      <>
-        <span key={item.id}>{item.text}</span>
-        <button onClick={() => dispatch({ type: ACTIONS.DELETE_TODO })}>
+      <div key={item.id}>
+        <span>{item.text}</span>
+        <button
+          onClick={() =>
+            dispatch({ type: ACTIONS.DELETE_TODO, payload: { id: item.id } })
+          }
+        >
           Delete todo
         </button>
-      </>
+      </div>
     );
   });
 
@@ -54,7 +55,7 @@ function App() {
         Add todo
       </button>
 
-      {list}
+      <div>{list}</div>
     </>
   );
 }
