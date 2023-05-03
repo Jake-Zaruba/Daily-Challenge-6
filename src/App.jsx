@@ -1,11 +1,27 @@
 import { useReducer, useState } from "react";
 
-const ACTIONS = { ADD_TODO: "ADD_TODO" };
+const ACTIONS = {
+  ADD_TODO: "ADD_TODO",
+  DELETE_TODO: "DELETE_TODO",
+};
 
 function reducer(state, action) {
   switch (action.type) {
     case ACTIONS.ADD_TODO:
-      return { todos: [...state.todos, { text: action.todo }] };
+      return {
+        todos: [
+          ...state.todos,
+          { text: action.text, id: Math.floor(Math.random() * 100) },
+        ],
+      };
+    case ACTIONS.DELETE_TODO:
+      return function (id) {
+        state.todos.filter((item) => {
+          if (item.id !== action.id) {
+            return item;
+          } else return item;
+        });
+      };
     default:
       return state;
   }
@@ -15,6 +31,17 @@ function App() {
   const [state, dispatch] = useReducer(reducer, { todos: [] });
   const [todo, setTodo] = useState("");
 
+  const list = state.todos.map((item) => {
+    return (
+      <>
+        <span key={item.id}>{item.text}</span>
+        <button onClick={() => dispatch({ type: ACTIONS.DELETE_TODO })}>
+          Delete todo
+        </button>
+      </>
+    );
+  });
+
   return (
     <>
       <h1>Todo</h1>
@@ -23,11 +50,11 @@ function App() {
         value={todo}
         onChange={(e) => setTodo(e.target.value)}
       />
-      <button onClick={() => dispatch({ type: ACTIONS.ADD_TODO, todo })}>
+      <button onClick={() => dispatch({ type: ACTIONS.ADD_TODO, text: todo })}>
         Add todo
       </button>
-      <button>Delete todo</button>
-      <h2>{state.todos.text}</h2>
+
+      {list}
     </>
   );
 }
